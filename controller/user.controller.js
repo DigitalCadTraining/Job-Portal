@@ -1,5 +1,5 @@
 import { User } from "../models/user.models.js";
-import bcrpt from "bcryptjs";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
@@ -19,13 +19,13 @@ export const register = async (req, res) => {
         success: false,
       });
     }
-    const hashedPassword = await bcrpt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     await User.create({
       fullName,
       email,
       phoneNumber,
-      password,
+      password: hashedPassword,
       role, //profile we arre not adding because it is not required as we put in models, if we need in future will add
     });
     return res.status(200).json({
@@ -71,7 +71,7 @@ export const login = async (req, res) => {
     };
 
     const token = await jwt.sign(tokenData, process.env.SECRET_KEY, {
-      expiresIn: "Id",
+      expiresIn: "1d",
     });
 
     user = {
@@ -86,7 +86,7 @@ export const login = async (req, res) => {
     return res
       .status(200)
       .cookie("token", token, {
-        maxAge: 1 * 24 * 60 * 60 * 1000,
+        maxAge: 1*24*60*60*1000,
         httpOnly: true,
         sameSite: "strict",
       })
