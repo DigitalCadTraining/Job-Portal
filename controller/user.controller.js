@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 export const register = async (req, res) => {
   try {
     const { fullName, email, phoneNumber, password, role } = req.body;
-    console.log(req.body , fullName)
+    console.log(req.body, fullName);
     if (!fullName || !email || !phoneNumber || !password || !role) {
       return res.status(400).json({
         message: "Somethings is missing",
@@ -86,7 +86,7 @@ export const login = async (req, res) => {
     return res
       .status(200)
       .cookie("token", token, {
-        maxAge: 1*24*60*60*1000,
+        maxAge: 1 * 24 * 60 * 60 * 1000,
         httpOnly: true,
         sameSite: "strict",
       })
@@ -114,18 +114,16 @@ export const updateProfile = async (req, res) => {
   try {
     const { fullName, email, phoneNumber, bio, skills } = req.body;
     const file = req.file;
-    if (!fullName || !email || !phoneNumber || !bio || !skills) {
-      return res.status(400).json({
-        message: "Something is missing",
-        success: false,
-      });
-    }
 
     //cloudinary ayega idhar
+    let skillsArray;
+    if (skills) {
+      skillsArray = skills.split(",");
+    }
 
-    const skillsArray = skills.split(",");
+    //const skillsArray = skills.split(",");
     const userId = req.id; //get from middleware authentication
-    let user = User.findById(userId);
+    let user = await User.findById(userId);
 
     if (!user) {
       return res.status(400).json({
@@ -135,11 +133,11 @@ export const updateProfile = async (req, res) => {
     }
 
     //updating data
-    (user.fullName = fullName),
-      (user.email = email),
-      (user.phoneNumber = phoneNumber),
-      (user.profile.bio = bio),
-      (user.profile.skills = skillsArray);
+    if (fullName) user.fullName = fullName;
+    if (email) user.email = email;
+    if (phoneNumber) user.phoneNumber = phoneNumber;
+    if (bio) user.bio = bio;
+    if (skills) user.skills = skills;
 
     //resume comes later here
 
