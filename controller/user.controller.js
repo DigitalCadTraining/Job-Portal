@@ -133,11 +133,11 @@ export const updateProfile = async (req, res) => {
     }
 
     //updating data
-    if (fullName) user.fullName = fullName;
-    if (email) user.email = email;
-    if (phoneNumber) user.phoneNumber = phoneNumber;
-    if (bio) user.bio = bio;
-    if (skills) user.skills = skills;
+    if (fullName) user.fullName = fullName
+    if (email) user.email = email
+    if (phoneNumber) user.phoneNumber = phoneNumber
+    if (bio) user.bio = bio
+    if (skills) user.skills = skills
 
     //resume comes later here
 
