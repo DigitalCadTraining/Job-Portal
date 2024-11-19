@@ -11,11 +11,9 @@ const comapanySchema = new mongoose.Schema({
     },
     website:{
         type:String,
-        required:true
     },
     location:{
         type:String,
-        required:true
     },
     logo:{
         type:String, //url for comapany logo

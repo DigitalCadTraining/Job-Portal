@@ -1,49 +1,58 @@
-import { request } from "express";
 import mongoose from "mongoose";
 
-const jobSchema = new mongoose.Schema({
-    title:{
-        type:String,
-        require:true
+const jobSchema = new mongoose.Schema(
+    {
+        title: {
+            type: String,
+            required: true // Fixed: added `type` and corrected spelling
+        },
+        description: {
+            type: String,
+            required: true
+        },
+        requirements: [
+            {
+                type: String
+            }
+        ], // Array of strings for skills
+        salary: {
+            type: Number,
+            required: true
+        },
+        experience: {
+            type: Number, // Can be a range or level, keep `String` if non-integer
+            required: true
+        },
+        jobLocation: {
+            type: String,
+            required: true
+        },
+        jobType: {
+            type: String,
+            required: true
+        },
+        position: {
+            type: Number,
+            required: true
+        },
+        company: {
+            type: mongoose.Schema.Types.ObjectId, // Reference to Company model
+            ref: 'Company',
+            required: true
+        },
+        created_by: {
+            type: mongoose.Schema.Types.ObjectId, // Reference to User model
+            ref: 'User',
+            required: true
+        },
+        applications: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Application' // Reference to Application model
+            }
+        ]
     },
-    description:{
-        type:String,
-        require:true
-    },
-    requirement:[{
-        type:String,
-    }], //array because it maybe many skills
-    salary:{
-        type:Number,
-        require:true
-    },
-    jobLocation:{
-        type:String,
-        require:true
-    },
-    jobType:{
-        type:String,
-        require:true
-    },
-    noOfPosition:{
-        type:Number,
-        require:true
-    },
-    company:{
-        type:mongoose.Schema.Types.ObjectId, //job and comapany will have relationship so objid will be created
-        ref:'Company',
-        require:true
-    },
-    created_by:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'User', //it maybe recruiter or admin
-        require:true
-    },
-    applications:[
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref:'Application'
-        }
-    ]
-}, {timestamps:true})
-export const job = mongoose.model("Job", jobSchema)
+    { timestamps: true } // Adds `createdAt` and `updatedAt` fields
+);
+
+export const Job = mongoose.model("Job", jobSchema);

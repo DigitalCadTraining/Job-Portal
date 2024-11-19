@@ -68,6 +68,7 @@ export const login = async (req, res) => {
 
     const tokenData = {
       userId: user._id,
+      userName: role
     };
 
     const token = await jwt.sign(tokenData, process.env.SECRET_KEY, {
@@ -93,6 +94,7 @@ export const login = async (req, res) => {
       .json({
         message: `Welcome back ${user.fullName}`,
         success: true,
+        token
       });
   } catch (error) {
     console.log(error);
@@ -122,7 +124,8 @@ export const updateProfile = async (req, res) => {
     }
 
     //const skillsArray = skills.split(",");
-    const userId = req.id; //get from middleware authentication
+    const userId = req.userId; //get from middleware authentication
+    console.log(userId)
     let user = await User.findById(userId);
 
     if (!user) {
