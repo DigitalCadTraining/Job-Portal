@@ -26,6 +26,8 @@ const isAuthenticated = async (req, res, next) => {
     req.userId = decoded.userId;
 
     console.log("req", req.userId)
+    console.log("req", req.id)
+    
 
     // Proceed to the next middleware
     next();

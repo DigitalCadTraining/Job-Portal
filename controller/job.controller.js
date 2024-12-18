@@ -1,29 +1,78 @@
 import { Job } from "../models/job.model.js";
 
 //admins post karenge
+
 export const postJob = async (req, res) => {
     try {
         const { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
-        const userId = req.id; // Ensure this is set in middleware
+        const userId = req.userId; // Ensure this is set in middleware
 
-        if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
+        if(!title){
             return res.status(400).json({
-                message: "Something is Missing",
-                status: false
-            });
-        };
+                message:"title missing",
+                status:false
+            })
+        }
+        if(!description){
+            return res.status(400).json({
+                message:"description missing",
+                status:false
+            })
+        }
+        if(!requirements){
+            return res.status(400).json({
+                message:"requirments missing",
+                status:false
+            })
+        }
+        if(!salary){
+            return res.status(400).json({
+                message:"salary missing",
+                status:false
+            })
+        }
+        if(!location){
+            return res.status(400).json({
+                message:"location missing",
+                status:false
+            })
+        }
+        if(!jobType){
+            return res.status(400).json({
+                message:"jobType missing",
+                status:false
+            })
+        }
+        if(!experience){
+            return res.status(400).json({
+                message:"experience missing",
+                status:false
+            })
+        }
+        if(!position){
+            return res.status(400).json({
+                message:"location missing",
+                status:false
+            })
+        }
+        if(!companyId){
+            return res.status(400).json({
+                message:"location missing",
+                status:false
+            })
+        }
 
         const job = await Job.create({
             title,
             description,
             requirements: requirements.split(","), // Convert comma-separated string to array
             salary: Number(salary),
-            jobLocation: location,
+            location,
             jobType,
-            experienceLevel: experience,
+            experience,
             position,
             company: companyId,
-            created_by: userId
+            created_by: req.userId
         });
 
         return res.status(200).json({
@@ -41,7 +90,6 @@ export const postJob = async (req, res) => {
 };
 
 
-
 //for student
 export const getAllJobs = async (req,res) => {
     try {
@@ -52,7 +100,12 @@ export const getAllJobs = async (req,res) => {
                 {description:{$regex:keyword, $options:"i"}},
             ]
         };
-        const jobs = await Job.find(query);
+        const jobs = await Job.find(query).populate({
+            path: "company"
+        }).sort({ createdAt: -1 });
+        
+        console.log("Populated Jobs:", jobs);        
+
         if(!jobs){
             return res.status(404).json({
                 message:"jobs not found.",
@@ -91,7 +144,7 @@ export const getJobById = async (req,res) => {
 //admins kitne job create kara hai abhi takk
 export const getAdminJobs = async (req,res) => {
     try {
-        const adminId = req.id;
+        const adminId = req.userId;
         const jobs = await Job.find({created_by:adminId});
         if(!jobs){
             return res.status(404).json({

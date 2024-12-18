@@ -23,7 +23,7 @@ const jobSchema = new mongoose.Schema(
             type: Number, // Can be a range or level, keep `String` if non-integer
             required: true
         },
-        jobLocation: {
+        location: {
             type: String,
             required: true
         },
@@ -38,6 +38,7 @@ const jobSchema = new mongoose.Schema(
         company: {
             type: mongoose.Schema.Types.ObjectId, // Reference to Company model
             ref: 'Company',
+            index: true,
             required: true
         },
         created_by: {
